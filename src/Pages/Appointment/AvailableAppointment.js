@@ -6,44 +6,53 @@ import BookingModal from './BookingModal';
 import Service from './Service';
 
 const AvailableAppointment = ({ date }) => {
-    // const [services, setServices] = useState([]);
-    const [treatment, setTreatment] = useState(null);
+  // const [services, setServices] = useState([]);
+  const [treatment, setTreatment] = useState(null);
 
-    const formattedDate = format(date, 'PP');
-    const {data: services, isLoading, refetch} = useQuery(['available', formattedDate], () => fetch(`http://localhost:5000/available?date=${formattedDate}`)
-    .then(res => res.json())
-    )
+  const formattedDate = format(date, 'PP');
+  const {
+    data: services,
+    isLoading,
+    refetch,
+  } = useQuery(['available', formattedDate], () =>
+    fetch(
+      `https://evening-garden-58753.herokuapp.com/available?date=${formattedDate}`
+    ).then(res => res.json())
+  );
 
-    if (isLoading){
-      return <Loading></Loading>
-    }
+  if (isLoading) {
+    return <Loading></Loading>;
+  }
 
-
-    // useEffect( () => {
-    //     fetch(`http://localhost:5000/available?date=${formattedDate}`)
-    //     .then(res => res.json())
-    //     .then(data => setServices(data));
-    // },[formattedDate])
-
+  // useEffect( () => {
+  //     fetch(`https://evening-garden-58753.herokuapp.com/available?date=${formattedDate}`)
+  //     .then(res => res.json())
+  //     .then(data => setServices(data));
+  // },[formattedDate])
 
   return (
-    <div className='my-10'>
-      <h4 className='text-xl text-secondary text-center my-10'> Available Appointments on: {format(date, 'PP')}</h4>
-      <div className='grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10'>
-          {
-              services?.map(service =><Service
-              key={service._id}
-              service={service}
-              setTreatment={setTreatment}
-              ></Service>)
-          }
+    <div className="my-10">
+      <h4 className="text-xl text-secondary text-center my-10">
+        {' '}
+        Available Appointments on: {format(date, 'PP')}
+      </h4>
+      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        {services?.map(service => (
+          <Service
+            key={service._id}
+            service={service}
+            setTreatment={setTreatment}
+          ></Service>
+        ))}
       </div>
-      {treatment && <BookingModal 
-      date={date} 
-      treatment={treatment}
-      setTreatment={setTreatment}
-      refetch={refetch}
-      ></BookingModal>}
+      {treatment && (
+        <BookingModal
+          date={date}
+          treatment={treatment}
+          setTreatment={setTreatment}
+          refetch={refetch}
+        ></BookingModal>
+      )}
     </div>
   );
 };
